@@ -64,3 +64,7 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+### Help
+```forge test cheatcodes
+Cheatcodes allow you to change the block number, your identity, and more. 
+You can access cheatcodes easily via the vm instance available in Forge Standard Library’s Test contract.
