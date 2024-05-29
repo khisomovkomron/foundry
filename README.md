@@ -68,3 +68,11 @@ $ cast --help
 ```forge test cheatcodes
 Cheatcodes allow you to change the block number, your identity, and more. 
 You can access cheatcodes easily via the vm instance available in Forge Standard Library’s Test contract.
+vm.prank(address)
+vm.expectEmit
+vm.expectRevert
+vm.startPrank(alice);
+assertEq(dai.balanceOf(alice), 10000e18);
+console.log(alice.balance);
+deal(address(dai), alice, 10000e18);
+hoax(alice, 100 ether); // set up a prank as Alice with 100 ETH balance
