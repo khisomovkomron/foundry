@@ -76,3 +76,12 @@ assertEq(dai.balanceOf(alice), 10000e18);
 console.log(alice.balance);
 deal(address(dai), alice, 10000e18);
 hoax(alice, 100 ether); // set up a prank as Alice with 100 ETH balance
+
+
+### Scripts 
+forge init 
+forge build 
+forge test
+forge test --fork-url <your_rpc_url>
+forge test --fork-url <your_rpc_url> --fork-block-number 1
+forge clean (removes all build artifacts and cache directories). It is also possible to ignore the cache entirely by passing --no-storage-caching, or with foundry toml by configuring no_storage_caching and rpc_storage_caching.
