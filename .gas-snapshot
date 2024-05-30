@@ -1,0 +1,8 @@
+ContractBTest:test_NumberIs42() (gas: 5195)
+CounterTest:testFuzz_SetNumber(uint256) (runs: 256, μ: 30221, ~: 31310)
+CounterTest:test_Increment() (gas: 31325)
+EmitContractTest:test_ExpectEmit() (gas: 72606)
+EmitContractTest:test_ExpectEmit_DoNotCheckData() (gas: 72617)
+OwnerOnlyUpTest:testFail_IncrementAsNotOwner() (gas: 8364)
+OwnerOnlyUpTest:test_IncrementAsOwner() (gas: 32509)
+OwnerOnlyUpTest:test_RevertWhen_CallerIsNotOwner() (gas: 8657)

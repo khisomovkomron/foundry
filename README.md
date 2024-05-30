@@ -39,7 +39,7 @@ $ forge fmt
 $ forge snapshot
 ```
 
-### Anvil
+### Anvil - local test net
 
 ```shell
 $ anvil
@@ -51,7 +51,7 @@ $ anvil
 $ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
 ```
 
-### Cast
+### Cast - command-line tool for performing Ethereum RPC calls
 
 ```shell
 $ cast <subcommand>
@@ -89,4 +89,15 @@ forge clean (removes all build artifacts and cache directories). It is also poss
 ### Gas Tracking
 Gas reports 
 Gas Snapshots
- 
+
+forge test --gas-report
+forge snapshop
+forge snapshot --diff .gas-snapshot2
+
+### Debugger 
+$ forge debug --debug $FILE --sig $FUNC
+
+### Cast 
+$ cast call 0x6b175474e89094c44da98b954eedeac495271d0f "totalSupply()(uint256)" --rpc-url https://eth-mainnet.alchemyapi.io/v2/Lc7oIGYeL_QvInzI0Wiu_pOZZDEKBrdf
+
+
