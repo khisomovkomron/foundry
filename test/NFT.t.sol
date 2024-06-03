@@ -17,4 +17,10 @@ contract NFTTest is Test {
         vm.expectRevert(MintPriceNotPaid.selector);
         nft.mintTo(address(1));
     }
+
+    function test_MintPricePaid() public {
+        nft.mintTo{value: 0.08 ether}(address(1));
+    }
+
+
 }
