@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: SEE LICENCSE IN LICENSE
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import "solmate/tokens/ERC721.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
+import "openzeppelin-contracts/contracts/access/Ownable.sol";
 
 error MintPriceNotPaid();
 error MaxSupply();
 error NonExistingTokenURI();
 error WithdrawTransfer();
 
-contract NFT is ERC721 {
-    uint256 public currentTokenId;
+contract NFT is ERC721, Ownable {
+    using Strings for uint256;
     string public baseURI;
     uint256 public currentTokenId;
     uint256 public constant TOTAL_SUPPLY = 10_000;
@@ -21,7 +22,7 @@ contract NFT is ERC721 {
         string memory _name,
         string memory _symbol,
         string memory _baseURI 
-    ) ERC721(_name, _symbol) {
+    ) ERC721(_name, _symbol) Ownable(msg.sender) {
         baseURI = _baseURI;
     }
 
@@ -34,11 +35,11 @@ contract NFT is ERC721 {
             revert MaxSupply();
         }
         currentTokenId = newTokenId;
-        _safeMint(recipient, newItemId);
-        return newItemId;
+        _safeMint(recipient, newTokenId);
+        return newTokenId;
     }
 
-    function tokenURI(uint256 id) public view virtual override returns (string memory) {
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         if (ownerOf(tokenId) == address(0)) {
             revert NonExistingTokenURI();
         }
