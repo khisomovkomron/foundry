@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: SEE LICENCSE IN LICENSE
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 import "solmate/tokens/ERC721.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";

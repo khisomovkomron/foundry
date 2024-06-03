@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 import "forge-std/Test.sol";
 import "../src/NFT.sol";
@@ -73,5 +73,63 @@ contract NFTTest is Test {
             vm.load(address(nft), bytes32(slotBalance))
         );
         assertEq(balanceSecondMint, 2);
+    }
+
+    function test_SafeContractReceiver() public {
+        Receiver receiver = new Receiver();
+        nft.mintTo{value: 0.08 ether}(address(receiver));
+        uint256 slotBalance = stdstore
+            .target(address(nft))
+            .sig(nft.balanceOf.selector)
+            .with_key(address(receiver))
+            .find();
+
+        uint256 balance = uint256(vm.load(address(nft), bytes32(slotBalance)));
+        assertEq(balance, 1);
+    }
+
+    function test_RevertUnSafeContractReceiver() public {
+        // Adress set to 11, because first 10 addresses are restricted for precompiles
+        vm.etch(address(11), bytes("mock code"));
+        vm.expectRevert(bytes(""));
+        nft.mintTo{value: 0.08 ether}(address(11));
+    }
+
+    function test_WithdrawalWorksAsOwner() public {
+        // Mint an NFT, sending eth to the contract
+        Receiver receiver = new Receiver();
+        address payable payee = payable(address(0x1337));
+        uint256 priorPayeeBalance = payee.balance;
+        nft.mintTo{value: nft.MINT_PRICE()}(address(receiver));
+        // Check that the balance of the contract is correct
+        assertEq(address(nft).balance, nft.MINT_PRICE());
+        uint256 nftBalance = address(nft).balance;
+        // Withdraw the balance and assert it was transferred
+        nft.withdrawPayments(payee);
+        assertEq(payee.balance, priorPayeeBalance + nftBalance);
+    }
+
+    function test_WithdrawalFailsAsNotOwner() public {
+        // Mint an NFT, sending eth to the contract
+        Receiver receiver = new Receiver();
+        nft.mintTo{value: nft.MINT_PRICE()}(address(receiver));
+        // Check that the balance of the contract is correct
+        assertEq(address(nft).balance, nft.MINT_PRICE());
+        // Confirm that a non-owner cannot withdraw
+        vm.expectRevert("Ownable: caller is not the owner");
+        vm.startPrank(address(0xd3ad));
+        nft.withdrawPayments(payable(address(0xd3ad)));
+        vm.stopPrank();
+    }
+}
+
+contract Receiver is ERC721TokenReceiver {
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 id,
+        bytes calldata data
+    ) external override returns (bytes4) {
+        return this.onERC721Received.selector;
     }
 }
